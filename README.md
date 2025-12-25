@@ -1,49 +1,52 @@
-# NeonChat - Anonymous Chat Application
+# AmourChat - Romantic Anonymous Connection
 
 ## Prerequisites
-- Node.js (v16 or higher)
-- npm or yarn
+- Node.js (v18 or higher)
+- npm
 
-## Installation & Running
+## Local Development
 
-### 1. Dependencies
-Since this is a single folder structure for the demo, you need to install packages for both frontend and backend.
+1. **Install Dependencies**
+   ```bash
+   npm install
+   ```
 
-```bash
-# Frontend dependencies
-npm install react react-dom lucide-react socket.io-client framer-motion
+2. **Run Development Server**
+   Start the frontend and backend in development mode (requires two terminals or concurrent setup, currently backend runs separately):
+   ```bash
+   # Terminal 1: Frontend
+   npm run dev
 
-# Backend dependencies
-npm install express socket.io cors
-npm install -D typescript ts-node @types/react @types/react-dom @types/node @types/express @types/cors tailwindcss postcss autoprefixer
-```
+   # Terminal 2: Backend (if needed for local dev, or use `npm run start` to test prod build)
+   # You can use `npx tsx server/index.ts` to run the backend in watch mode if desired.
+   ```
+   *Note: efficient development usually involves running `npm run dev` for frontend hot-reload and running the backend separately.*
 
-### 2. Run the Backend (Server)
-Open a terminal and run:
+## Production Check & Deployment
 
-```bash
-# Using ts-node directly
-npx ts-node server/index.ts
-```
-The server will start on `http://localhost:3001`.
+The application is configured to be deployed as a monolithic Node.js application (Backend serving Frontend).
 
-### 3. Run the Frontend (Client)
-Open a **new** terminal window and run your development server (e.g., via Vite or Create React App). Assuming you have a Vite setup:
+1. **Build**
+   ```bash
+   npm run build
+   ```
+   This compiles the React frontend to `dist/` and the TypeScript backend to `dist-server/`.
 
-```bash
-npm run dev
-```
-The app will open at `http://localhost:5173` (or similar).
+2. **Test Production Build Locally**
+   ```bash
+   npm start
+   ```
+   This runs the optimized backend serving the static frontend files on `http://localhost:3001`.
 
-## Deployment
-
-1. **Backend:** Deploy `server/index.ts` to a Node.js host (Heroku, Render, Railway). 
-   - Ensure you update the `PORT` environment variable.
-2. **Frontend:** Deploy the React app to Vercel or Netlify.
-   - **Important:** Update `SOCKET_URL` in `hooks/useChat.ts` to point to your deployed backend URL (e.g., `https://my-backend.onrender.com`).
+3. **Deploy to Render/Railway/Heroku**
+   - Connect your GitHub repository.
+   - Use the **Build Command**: `npm run build`
+   - Use the **Start Command**: `npm start`
+   - The server will automatically use the `PORT` provided by the host.
 
 ## Features
-- **Queue System:** Instantly pairs 2 available users.
-- **Real-time:** Socket.IO ensures <20ms latency.
-- **Auto-Reconnect:** "Next" button automatically handles disconnect logic and re-queues.
-- **Cyberpunk UI:** Custom Tailwind config in `index.html`.
+- **Queue System:** Instantly pairs 2 available users based on interests.
+- **Real-time:** Socket.IO ensures low latency messaging.
+- **Video Chat:** WebRTC integration for face-to-face connection.
+- **Auto-Reconnect:** Seamless partner switching.
+- **Responsive Design:** Works beautifully on mobile and desktop.
