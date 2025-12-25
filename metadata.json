@@ -1,0 +1,8 @@
+{
+  "name": "AmourChat - Romantic Anonymous Connection",
+  "description": "A premium, ultra-smooth anonymous chat application with a romantic aesthetic. Features real-time matching, zero-lag messaging, and elegant glassmorphism UI.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
