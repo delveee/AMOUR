@@ -2,31 +2,28 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { Message, ConnectionStatus, ClientToServerEvents, ServerToClientEvents, SignalData } from '../types';
 
-// PRODUCTION CONFIGURATION:
-// Safely detect if we are in production environment (works for Vite, CRA, and custom builds)
-const isProduction = (() => {
-  try {
-    const meta = import.meta as any;
-    if (meta && meta.env && meta.env.PROD) return true;
-    if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'production') return true;
-  } catch (e) {
-    // Ignore errors during env check
-  }
-  return false;
-})();
-
+// reliable production check based on hostname
 const getSocketUrl = () => {
+  if (typeof window === 'undefined') return 'http://localhost:3001';
+
+  const { hostname, origin } = window.location;
+
+  // If explicitly provided in env (e.g. for separating front/back)
   if (import.meta.env?.VITE_SOCKET_URL) {
     return import.meta.env.VITE_SOCKET_URL;
   }
-  if (isProduction) {
-    return window.location.origin;
+
+  // If we are NOT running locally, assume production
+  if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+    return origin;
   }
+
+  // Fallback for local development
   return 'http://localhost:3001';
 };
 
 const SOCKET_URL = getSocketUrl();
-console.log('Connecting to Socket URL:', SOCKET_URL);
+console.log('[AmourChat] Initializing Socket with URL:', SOCKET_URL);
 
 const ICE_SERVERS = {
   iceServers: [
