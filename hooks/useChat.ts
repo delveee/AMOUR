@@ -15,9 +15,18 @@ const isProduction = (() => {
   return false;
 })();
 
-const SOCKET_URL = isProduction 
-  ? window.location.origin 
-  : 'http://localhost:3001';
+const getSocketUrl = () => {
+  if (import.meta.env?.VITE_SOCKET_URL) {
+    return import.meta.env.VITE_SOCKET_URL;
+  }
+  if (isProduction) {
+    return window.location.origin;
+  }
+  return 'http://localhost:3001';
+};
+
+const SOCKET_URL = getSocketUrl();
+console.log('Connecting to Socket URL:', SOCKET_URL);
 
 const ICE_SERVERS = {
   iceServers: [
@@ -34,13 +43,13 @@ export const useChat = () => {
   const [currentInterests, setCurrentInterests] = useState<string[]>([]);
   const [commonInterests, setCommonInterests] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Video Chat State
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const [isVideoEnabled, setIsVideoEnabled] = useState(false);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
-  const [isVideoActive, setIsVideoActive] = useState(false); 
+  const [isVideoActive, setIsVideoActive] = useState(false);
 
   const socketRef = useRef<Socket<ServerToClientEvents, ClientToServerEvents> | null>(null);
   const peerConnection = useRef<RTCPeerConnection | null>(null);
@@ -96,32 +105,32 @@ export const useChat = () => {
   const startVideo = async () => {
     try {
       console.log("[AmourChat Debug] Requesting User Media");
-      const stream = await navigator.mediaDevices.getUserMedia({ 
+      const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "user" }, // Prefer front camera on mobile
-        audio: true 
+        audio: true
       });
-      
+
       console.log("[AmourChat Debug] Media Stream Acquired", stream.id);
       setLocalStream(stream);
       setIsVideoActive(true);
       setError(null);
-      
+
       // If we are already connected, let's try to upgrade to video
       if (peerConnection.current) {
         stream.getTracks().forEach(track => {
           // Check if track already exists to avoid duplication errors
           const senders = peerConnection.current?.getSenders();
           const trackExists = senders?.some(sender => sender.track?.kind === track.kind);
-          
+
           if (!trackExists) {
             peerConnection.current?.addTrack(track, stream);
           }
         });
-        
+
         // Initiate offer
         const offer = await peerConnection.current.createOffer();
         await peerConnection.current.setLocalDescription(offer);
-        
+
         if (partnerIdRef.current && socketRef.current) {
           socketRef.current.emit('signal', {
             target: partnerIdRef.current,
@@ -152,7 +161,7 @@ export const useChat = () => {
     setLocalStream(null);
     setRemoteStream(null);
     setIsVideoActive(false);
-    
+
     if (peerConnection.current) {
       peerConnection.current.close();
       peerConnection.current = null;
@@ -184,14 +193,14 @@ export const useChat = () => {
     const socket = io(SOCKET_URL, {
       transports: ['websocket'],
       reconnectionAttempts: 5,
-      autoConnect: false 
+      autoConnect: false
     });
 
     socketRef.current = socket;
 
     socket.on('connect_error', (err) => {
-        console.error("[AmourChat Error] Socket Connection Error:", err.message);
-        // Don't show UI error for socket connect unless persistent, strictly debug
+      console.error("[AmourChat Error] Socket Connection Error:", err.message);
+      // Don't show UI error for socket connect unless persistent, strictly debug
     });
 
     socket.on('matched', async (data) => {
@@ -201,14 +210,14 @@ export const useChat = () => {
       setCommonInterests(data.commonInterests || []);
       setMessages([{
         id: 'system-start',
-        text: data.commonInterests && data.commonInterests.length > 0 
-          ? `Connected with stranger who likes: ${data.commonInterests.join(', ')}` 
+        text: data.commonInterests && data.commonInterests.length > 0
+          ? `Connected with stranger who likes: ${data.commonInterests.join(', ')}`
           : 'You are now connected with a stranger.',
         sender: 'system',
         timestamp: Date.now()
       }]);
       setPartnerTyping(false);
-      
+
       createPeerConnection();
     });
 
@@ -231,20 +240,20 @@ export const useChat = () => {
           console.log("[AmourChat Debug] Received Offer");
           setIsVideoActive(true); // Auto show UI
           await pc.setRemoteDescription(new RTCSessionDescription(data.payload));
-          
+
           if (!localStream) {
-               try {
-                 const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                 setLocalStream(stream);
-                 stream.getTracks().forEach(track => pc.addTrack(track, stream));
-               } catch (e) {
-                 console.log("[AmourChat Warn] Auto-accepting video without local media (view only)");
-               }
+            try {
+              const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+              setLocalStream(stream);
+              stream.getTracks().forEach(track => pc.addTrack(track, stream));
+            } catch (e) {
+              console.log("[AmourChat Warn] Auto-accepting video without local media (view only)");
+            }
           }
 
           const answer = await pc.createAnswer();
           await pc.setLocalDescription(answer);
-          
+
           if (partnerIdRef.current && socketRef.current) {
             socketRef.current.emit('signal', {
               target: partnerIdRef.current,
@@ -273,7 +282,7 @@ export const useChat = () => {
       setStatus('partner_disconnected');
       setPartnerTyping(false);
       partnerIdRef.current = null;
-      stopVideo(); 
+      stopVideo();
       setMessages((prev) => [...prev, {
         id: 'system-end-' + Date.now(),
         text: 'Stranger has disconnected.',
@@ -294,11 +303,11 @@ export const useChat = () => {
 
   const joinQueue = useCallback((interests: string[] = []) => {
     if (!socketRef.current) return;
-    
+
     if (!socketRef.current.connected) {
       socketRef.current.connect();
     }
-    
+
     setCurrentInterests(interests);
     setStatus('searching');
     setMessages([]);
@@ -327,10 +336,10 @@ export const useChat = () => {
 
   const nextPartner = useCallback(() => {
     if (!socketRef.current) return;
-    
-    stopVideo(); 
+
+    stopVideo();
     socketRef.current.emit('next_partner', { interests: currentInterests });
-    
+
     setStatus('searching');
     setMessages([]);
     setPartnerTyping(false);
