@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Button } from './Button';
-import { Heart, Users, Sparkles, User, Tag, X, Github, Coffee } from 'lucide-react';
+import { Heart, Users, Sparkles, User, Tag, X, Github, Coffee, Video } from 'lucide-react';
 import { AnimatedCount } from './AnimatedCount';
 
 interface MatchScreenProps {
-  onFindMatch: (interests: string[]) => void;
+  onFindMatch: (interests: string[], mode: 'text' | 'video') => void;
   onlineCount?: number;
 }
 
@@ -28,16 +28,16 @@ export const MatchScreen: React.FC<MatchScreenProps> = ({ onFindMatch, onlineCou
 
   return (
     <div className="flex flex-col h-full w-full max-w-5xl mx-auto text-center animate-fade-in overflow-y-auto custom-scrollbar overflow-x-hidden relative scroll-smooth">
-      
+
       {/* Main Scrollable Content Area */}
       {/* Added larger padding-bottom (pb-12) and mb-8 to ensure gap before footer */}
       <div className="flex-1 flex flex-col items-center justify-center min-h-[500px] w-full p-4 md:p-6 pb-12">
-        
+
         {/* Hero Section */}
         <div className="mb-10 relative px-4 w-full">
           {/* Animated Glow Behind */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-gradient-to-tr from-romantic-primary/20 via-purple-500/10 to-romantic-accent/20 blur-[60px] rounded-full animate-pulse-slow pointer-events-none" />
-          
+
           <div className="inline-flex items-center justify-center px-4 py-1.5 mb-6 bg-white/5 rounded-full backdrop-blur-md border border-white/10 shadow-[0_0_20px_rgba(0,0,0,0.2)] hover:bg-white/10 transition-colors cursor-default">
             <Heart className="text-romantic-primary fill-romantic-primary mr-2 animate-heartbeat" size={16} />
             <span className="text-romantic-secondary text-xs font-bold tracking-widest uppercase">Anonymous Dating</span>
@@ -47,7 +47,7 @@ export const MatchScreen: React.FC<MatchScreenProps> = ({ onFindMatch, onlineCou
             Amour<span className="text-romantic-primary">.</span>
           </h1>
           <p className="text-base md:text-xl text-romantic-text/80 font-body max-w-lg mx-auto leading-relaxed relative z-10">
-            The world's most romantic way to meet strangers. <br className="hidden md:block"/>
+            The world's most romantic way to meet strangers. <br className="hidden md:block" />
             <span className="text-romantic-secondary italic">Safe. Encrypted. Serendipitous.</span>
           </p>
         </div>
@@ -58,7 +58,7 @@ export const MatchScreen: React.FC<MatchScreenProps> = ({ onFindMatch, onlineCou
             <div className="pl-3 pr-1 text-romantic-primary/70 shrink-0">
               <Tag size={18} />
             </div>
-            
+
             {interests.map(tag => (
               <span key={tag} className="flex items-center gap-1 bg-gradient-to-r from-romantic-primary to-romantic-accent text-white text-xs px-3 py-1.5 rounded-full font-bold border border-white/10 animate-pop shadow-md max-w-full truncate">
                 <span className="truncate max-w-[100px]">{tag}</span>
@@ -83,18 +83,33 @@ export const MatchScreen: React.FC<MatchScreenProps> = ({ onFindMatch, onlineCou
           </div>
         </div>
 
-        {/* Main Action Button */}
-        <div className="relative group mb-16 w-full max-w-xs mx-auto z-10 px-4">
-          <div className="absolute -inset-1 bg-gradient-to-r from-romantic-primary via-purple-500 to-romantic-accent rounded-full blur opacity-50 group-hover:opacity-80 transition duration-500 group-hover:duration-200 animate-pulse-slow"></div>
-          <Button 
-            size="lg" 
-            fullWidth 
-            onClick={() => onFindMatch(interests)}
-            className="relative h-16 text-xl rounded-full shadow-2xl tracking-wide"
-            icon={<Heart className="animate-pulse fill-white/30" size={24} />}
-          >
-            {interests.length > 0 ? "Find Soulmate" : "Start Chatting"}
-          </Button>
+        {/* Main Action Buttons */}
+        <div className="flex flex-col md:flex-row gap-4 mb-16 w-full max-w-xl mx-auto z-10 px-4">
+          <div className="flex-1 relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
+            <Button
+              size="lg"
+              fullWidth
+              onClick={() => onFindMatch(interests, 'text')}
+              className="relative h-16 text-lg rounded-full shadow-xl tracking-wide bg-white/10 hover:bg-white/20 border-white/10"
+              icon={<Sparkles className="text-cyan-400" size={20} />}
+            >
+              Text Chat
+            </Button>
+          </div>
+
+          <div className="flex-1 relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-romantic-primary via-purple-500 to-romantic-accent rounded-full blur opacity-50 group-hover:opacity-80 transition duration-500 group-hover:duration-200 animate-pulse-slow"></div>
+            <Button
+              size="lg"
+              fullWidth
+              onClick={() => onFindMatch(interests, 'video')}
+              className="relative h-16 text-xl rounded-full shadow-2xl tracking-wide"
+              icon={<Video className="animate-pulse fill-white/30" size={24} />}
+            >
+              Video Chat
+            </Button>
+          </div>
         </div>
 
         {/* Stats Grid - Increased bottom margin significantly */}
@@ -119,9 +134,9 @@ export const MatchScreen: React.FC<MatchScreenProps> = ({ onFindMatch, onlineCou
       {/* Footer - shrink-0 prevents collapse, z-20 puts it above, solid semi-transparent background */}
       <footer className="mt-auto shrink-0 w-full max-w-4xl mx-auto border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-[10px] text-white/30 font-body gap-4 py-6 px-6 relative z-20 bg-romantic-bg/80 backdrop-blur-xl">
         <div className="flex items-center gap-2">
-           <span>&copy; 2024 AMOUR CHAT</span>
-           <span>&bull;</span>
-           <span>v3.0.0</span>
+          <span>&copy; 2024 AMOUR CHAT</span>
+          <span>&bull;</span>
+          <span>v3.0.0</span>
         </div>
         <div className="flex items-center gap-4">
           <a href="#" className="hover:text-romantic-primary transition-colors flex items-center gap-1">

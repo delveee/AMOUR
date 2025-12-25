@@ -5,16 +5,16 @@ import { useChat } from './hooks/useChat';
 import { Heart } from 'lucide-react';
 
 const App: React.FC = () => {
-  const { 
-    status, 
-    messages, 
-    partnerTyping, 
+  const {
+    status,
+    messages,
+    partnerTyping,
     onlineCount,
     commonInterests,
-    joinQueue, 
-    sendMessage, 
-    sendTyping, 
-    nextPartner, 
+    joinQueue,
+    sendMessage,
+    sendTyping,
+    nextPartner,
     leaveChat,
     video,
     error,
@@ -24,7 +24,7 @@ const App: React.FC = () => {
   return (
     // Main container uses 100dvh for mobile browsers
     <div className="h-[100dvh] w-full bg-romantic-bg text-romantic-text font-body selection:bg-romantic-primary/30 selection:text-white overflow-hidden flex flex-col relative overscroll-none">
-      
+
       {/* Dynamic Background */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,_#2d1b24_0%,_#0f0508_80%)]" />
@@ -37,16 +37,16 @@ const App: React.FC = () => {
 
       {/* Main Content Area */}
       <main className="relative z-10 flex-1 flex flex-col w-full max-w-7xl mx-auto h-full overflow-hidden">
-        
+
         {/* Conditional Header for Large Screens (Home only) */}
         {status === 'idle' && (
           <header className="absolute top-0 left-0 p-6 z-50 pointer-events-none hidden md:block">
-             <div className="flex items-center gap-2 pointer-events-auto opacity-80 hover:opacity-100 transition-opacity">
-               <div className="p-1.5 bg-romantic-primary/20 rounded-lg">
-                 <Heart className="text-romantic-primary fill-romantic-primary" size={20} />
-               </div>
-               <span className="font-display font-bold text-lg text-white tracking-wide">Amour</span>
-             </div>
+            <div className="flex items-center gap-2 pointer-events-auto opacity-80 hover:opacity-100 transition-opacity">
+              <div className="p-1.5 bg-romantic-primary/20 rounded-lg">
+                <Heart className="text-romantic-primary fill-romantic-primary" size={20} />
+              </div>
+              <span className="font-display font-bold text-lg text-white tracking-wide">Amour</span>
+            </div>
           </header>
         )}
 
@@ -54,7 +54,7 @@ const App: React.FC = () => {
           {status === 'idle' ? (
             <MatchScreen onFindMatch={joinQueue} onlineCount={onlineCount} />
           ) : (
-            <ChatWindow 
+            <ChatWindow
               status={status}
               messages={messages}
               onSendMessage={sendMessage}
@@ -66,6 +66,7 @@ const App: React.FC = () => {
               video={video}
               error={error}
               onErrorDismiss={() => setError(null)}
+              onlineCount={onlineCount}
             />
           )}
         </div>

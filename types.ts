@@ -22,11 +22,11 @@ export interface ServerToClientEvents {
 }
 
 export interface ClientToServerEvents {
-  join_queue: (data: { interests: string[] }) => void;
+  join_queue: (data: { interests: string[], mode: 'text' | 'video' }) => void;
   leave_queue: () => void;
   send_message: (data: { text: string }) => void;
   typing: (isTyping: boolean) => void;
   disconnect_chat: () => void;
-  next_partner: (data: { interests: string[] }) => void;
+  next_partner: (data: { interests: string[], mode: 'text' | 'video' }) => void;
   signal: (data: { target: string; signal: SignalData }) => void;
 }

@@ -39,6 +39,7 @@ export const useChat = () => {
   const [onlineCount, setOnlineCount] = useState(0);
   const [currentInterests, setCurrentInterests] = useState<string[]>([]);
   const [commonInterests, setCommonInterests] = useState<string[]>([]);
+  const [currentMode, setCurrentMode] = useState<'text' | 'video'>('text');
   const [error, setError] = useState<string | null>(null);
 
   // Video Chat State
@@ -216,6 +217,11 @@ export const useChat = () => {
       setPartnerTyping(false);
 
       createPeerConnection();
+
+      // Auto-start video if we are in video mode
+      if (currentMode === 'video') {
+        startVideo();
+      }
     });
 
     socket.on('message', (data) => {
@@ -298,7 +304,7 @@ export const useChat = () => {
     };
   }, []);
 
-  const joinQueue = useCallback((interests: string[] = []) => {
+  const joinQueue = useCallback((interests: string[] = [], mode: 'text' | 'video' = 'text') => {
     if (!socketRef.current) return;
 
     if (!socketRef.current.connected) {
@@ -306,11 +312,12 @@ export const useChat = () => {
     }
 
     setCurrentInterests(interests);
+    setCurrentMode(mode);
     setStatus('searching');
     setMessages([]);
     setCommonInterests([]);
     setError(null);
-    socketRef.current.emit('join_queue', { interests });
+    socketRef.current.emit('join_queue', { interests, mode });
   }, []);
 
   const sendMessage = useCallback((text: string) => {
@@ -335,7 +342,7 @@ export const useChat = () => {
     if (!socketRef.current) return;
 
     stopVideo();
-    socketRef.current.emit('next_partner', { interests: currentInterests });
+    socketRef.current.emit('next_partner', { interests: currentInterests, mode: currentMode });
 
     setStatus('searching');
     setMessages([]);
@@ -343,7 +350,7 @@ export const useChat = () => {
     setCommonInterests([]);
     setError(null);
     partnerIdRef.current = null;
-  }, [currentInterests]);
+  }, [currentInterests, currentMode, stopVideo]);
 
   const leaveChat = useCallback(() => {
     if (!socketRef.current) return;

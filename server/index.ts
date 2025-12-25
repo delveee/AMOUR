@@ -29,6 +29,7 @@ interface User {
   partnerId: string | null;
   interests: string[];
   isTyping: boolean;
+  mode: 'text' | 'video';
 }
 
 // State Management
@@ -66,6 +67,9 @@ const handleMatch = () => {
 
       const user2 = users.get(user2Id);
       if (!user2) continue;
+
+      // MUST match modes
+      if (user1.mode !== user2.mode) continue;
 
       const u1HasInterests = user1.interests.length > 0;
       const u2HasInterests = user2.interests.length > 0;
@@ -120,11 +124,12 @@ const handleMatch = () => {
   }
 };
 
-const addToQueue = (socketId: string, interests: string[] = []) => {
+const addToQueue = (socketId: string, interests: string[] = [], mode: 'text' | 'video' = 'text') => {
   const user = users.get(socketId);
   if (!user) return;
 
   user.interests = interests;
+  user.mode = mode;
 
   if (user.partnerId) return;
 
@@ -139,14 +144,15 @@ io.on('connection', (socket: Socket) => {
     id: socket.id,
     partnerId: null,
     interests: [],
-    isTyping: false
+    isTyping: false,
+    mode: 'text'
   });
 
   // Immediate update
   broadcastOnlineCount();
 
-  socket.on('join_queue', (data: { interests: string[] }) => {
-    addToQueue(socket.id, data.interests);
+  socket.on('join_queue', (data: { interests: string[], mode: 'text' | 'video' }) => {
+    addToQueue(socket.id, data.interests, data.mode);
   });
 
   socket.on('send_message', (data: { text: string }) => {
@@ -168,7 +174,7 @@ io.on('connection', (socket: Socket) => {
     }
   });
 
-  socket.on('next_partner', (data: { interests: string[] }) => {
+  socket.on('next_partner', (data: { interests: string[], mode: 'text' | 'video' }) => {
     const user = users.get(socket.id);
     if (user) {
       if (user.partnerId) {
@@ -183,7 +189,7 @@ io.on('connection', (socket: Socket) => {
         waitingQueue.splice(queueIndex, 1);
       }
 
-      addToQueue(socket.id, data.interests);
+      addToQueue(socket.id, data.interests, data.mode);
     }
   });
 
