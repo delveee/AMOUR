@@ -5,24 +5,31 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "vite build && npm run build:server",
+    "build:server": "tsc -p tsconfig.server.json",
+    "preview": "vite preview",
+    "start": "cross-env NODE_ENV=production node dist-server/index.js"
   },
   "dependencies": {
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
-    "lucide-react": "^0.562.0",
-    "socket.io": "^4.8.3",
+    "cors": "^2.8.5",
     "express": "^5.2.1",
     "http": "^0.0.1-security",
-    "cors": "^2.8.5",
+    "lucide-react": "^0.562.0",
+    "path": "^0.12.7",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "socket.io": "^4.8.3",
     "socket.io-client": "^4.8.3",
-    "url": "^0.11.4",
-    "path": "^0.12.7"
+    "url": "^0.11.4"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
     "@types/node": "^22.14.0",
+    "@types/ws": "^8.18.1",
     "@vitejs/plugin-react": "^5.0.0",
+    "cross-env": "^10.1.0",
+    "tsx": "^4.21.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"
   }

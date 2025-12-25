@@ -19,7 +19,7 @@ app.use(cors());
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "*", 
+    origin: "*",
     methods: ["GET", "POST"]
   }
 });
@@ -55,15 +55,15 @@ const handleMatch = () => {
   for (let i = 0; i < waitingQueue.length; i++) {
     const user1Id = waitingQueue[i];
     if (matchedIds.has(user1Id)) continue;
-    
+
     const user1 = users.get(user1Id);
-    if (!user1) continue; 
+    if (!user1) continue;
 
     // Look for a suitable partner
     for (let j = i + 1; j < waitingQueue.length; j++) {
       const user2Id = waitingQueue[j];
       if (matchedIds.has(user2Id)) continue;
-      
+
       const user2 = users.get(user2Id);
       if (!user2) continue;
 
@@ -74,15 +74,15 @@ const handleMatch = () => {
 
       if (u1HasInterests) {
         if (u2HasInterests) {
-           const intersection = getCommonInterests(user1.interests, user2.interests);
-           if (intersection.length > 0) {
-             isMatch = true;
-             commonTags = intersection;
-           }
+          const intersection = getCommonInterests(user1.interests, user2.interests);
+          if (intersection.length > 0) {
+            isMatch = true;
+            commonTags = intersection;
+          }
         }
       } else {
         if (!u2HasInterests) {
-           isMatch = true;
+          isMatch = true;
         }
       }
 
@@ -97,9 +97,9 @@ const handleMatch = () => {
 
   // Remove matched users from queue
   if (matchedIds.size > 0) {
-     const nextQueue = waitingQueue.filter(id => !matchedIds.has(id));
-     waitingQueue.length = 0;
-     waitingQueue.push(...nextQueue);
+    const nextQueue = waitingQueue.filter(id => !matchedIds.has(id));
+    waitingQueue.length = 0;
+    waitingQueue.push(...nextQueue);
   }
 
   // Notify users
@@ -107,14 +107,14 @@ const handleMatch = () => {
     const { u1, u2, common } = match;
     const user1 = users.get(u1);
     const user2 = users.get(u2);
-    
+
     if (user1 && user2) {
       user1.partnerId = u2;
       user2.partnerId = u1;
 
       io.to(u1).emit('matched', { partnerId: u2, commonInterests: common });
       io.to(u2).emit('matched', { partnerId: u1, commonInterests: common });
-      
+
       console.log(`Matched ${u1} with ${u2} [Tags: ${common.join(', ')}]`);
     }
   }
@@ -177,7 +177,7 @@ io.on('connection', (socket: Socket) => {
         if (partner) partner.partnerId = null;
         user.partnerId = null;
       }
-      
+
       const queueIndex = waitingQueue.indexOf(socket.id);
       if (queueIndex > -1) {
         waitingQueue.splice(queueIndex, 1);
@@ -195,7 +195,7 @@ io.on('connection', (socket: Socket) => {
       if (partner) partner.partnerId = null;
       user.partnerId = null;
     }
-    
+
     const queueIndex = waitingQueue.indexOf(socket.id);
     if (queueIndex > -1) {
       waitingQueue.splice(queueIndex, 1);
@@ -204,7 +204,7 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('disconnect', () => {
     const user = users.get(socket.id);
-    
+
     const queueIndex = waitingQueue.indexOf(socket.id);
     if (queueIndex > -1) {
       waitingQueue.splice(queueIndex, 1);
@@ -227,7 +227,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../dist')));
 
   // Catch-all route to serve index.html for client-side routing
-  app.get('*', (req, res) => {
+  app.get(/(.*)/, (req, res) => {
     res.sendFile(path.join(__dirname, '../dist/index.html'));
   });
 }
