@@ -23,7 +23,10 @@ const App: React.FC = () => {
 
   return (
     // Main container uses 100dvh for mobile browsers
-    <div className="h-[100dvh] w-full bg-romantic-bg text-romantic-text font-body selection:bg-romantic-primary/30 selection:text-white overflow-hidden flex flex-col relative overscroll-none">
+    <div
+      className="w-full bg-romantic-bg text-romantic-text font-body selection:bg-romantic-primary/30 selection:text-white overflow-hidden flex flex-col relative overscroll-none"
+      style={{ height: '100dvh', minHeight: '-webkit-fill-available' }}
+    >
 
       {/* Dynamic Background */}
       <div className="fixed inset-0 pointer-events-none z-0">

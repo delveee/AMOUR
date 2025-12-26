@@ -99,9 +99,12 @@ export const useChat = () => {
       setError(`Connection Error: ${err.message}`);
     }
   };
-
   const startVideo = async () => {
     try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error("Your browser does not support video calls. Please use Chrome, Safari, or Firefox.");
+      }
+
       console.log("[AmourChat Debug] Requesting User Media");
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "user" }, // Prefer front camera on mobile
@@ -143,7 +146,7 @@ export const useChat = () => {
       } else if (err.name === 'NotFoundError') {
         setError("No camera or microphone found on this device.");
       } else {
-        setError(`Could not start video: ${err.message}`);
+        setError(err.message || "Could not start video.");
       }
     }
   };
