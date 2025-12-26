@@ -68,8 +68,8 @@ const handleMatch = () => {
       const user2 = users.get(user2Id);
       if (!user2) continue;
 
-      // MUST match modes
-      if (user1.mode !== user2.mode) continue;
+      // Universal matching - removed strict mode check
+      // if (user1.mode !== user2.mode) continue;
 
       const u1HasInterests = user1.interests.length > 0;
       const u2HasInterests = user2.interests.length > 0;

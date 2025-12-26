@@ -51,6 +51,8 @@ const handleMatch = () => {
             const user2 = users.get(user2Id);
             if (!user2)
                 continue;
+            // Universal matching - removed strict mode check
+            // if (user1.mode !== user2.mode) continue;
             const u1HasInterests = user1.interests.length > 0;
             const u2HasInterests = user2.interests.length > 0;
             let isMatch = false;
@@ -97,11 +99,12 @@ const handleMatch = () => {
         }
     }
 };
-const addToQueue = (socketId, interests = []) => {
+const addToQueue = (socketId, interests = [], mode = 'text') => {
     const user = users.get(socketId);
     if (!user)
         return;
     user.interests = interests;
+    user.mode = mode;
     if (user.partnerId)
         return;
     if (!waitingQueue.includes(socketId)) {
@@ -114,12 +117,13 @@ io.on('connection', (socket) => {
         id: socket.id,
         partnerId: null,
         interests: [],
-        isTyping: false
+        isTyping: false,
+        mode: 'text'
     });
     // Immediate update
     broadcastOnlineCount();
     socket.on('join_queue', (data) => {
-        addToQueue(socket.id, data.interests);
+        addToQueue(socket.id, data.interests, data.mode);
     });
     socket.on('send_message', (data) => {
         const user = users.get(socket.id);
@@ -151,7 +155,7 @@ io.on('connection', (socket) => {
             if (queueIndex > -1) {
                 waitingQueue.splice(queueIndex, 1);
             }
-            addToQueue(socket.id, data.interests);
+            addToQueue(socket.id, data.interests, data.mode);
         }
     });
     socket.on('leave_queue', () => {

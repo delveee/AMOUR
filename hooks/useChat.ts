@@ -218,10 +218,7 @@ export const useChat = () => {
 
       createPeerConnection();
 
-      // Auto-start video if we are in video mode
-      if (currentMode === 'video') {
-        startVideo();
-      }
+      // Removed auto-video start on match. Video is now an opt-in upgrade.
     });
 
     socket.on('message', (data) => {
@@ -244,14 +241,10 @@ export const useChat = () => {
           setIsVideoActive(true); // Auto show UI
           await pc.setRemoteDescription(new RTCSessionDescription(data.payload));
 
+          // Privacy Update: Do NOT auto-start local camera. User must opt-in.
+          // We just accept the remote stream for now.
           if (!localStream) {
-            try {
-              const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-              setLocalStream(stream);
-              stream.getTracks().forEach(track => pc.addTrack(track, stream));
-            } catch (e) {
-              console.log("[AmourChat Warn] Auto-accepting video without local media (view only)");
-            }
+            console.log("[AmourChat Debug] Accepting video in receive-only mode");
           }
 
           const answer = await pc.createAnswer();

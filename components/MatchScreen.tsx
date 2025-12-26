@@ -83,33 +83,18 @@ export const MatchScreen: React.FC<MatchScreenProps> = ({ onFindMatch, onlineCou
           </div>
         </div>
 
-        {/* Main Action Buttons */}
-        <div className="flex flex-col md:flex-row gap-4 mb-16 w-full max-w-xl mx-auto z-10 px-4">
-          <div className="flex-1 relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
-            <Button
-              size="lg"
-              fullWidth
-              onClick={() => onFindMatch(interests, 'text')}
-              className="relative h-16 text-lg rounded-full shadow-xl tracking-wide bg-white/10 hover:bg-white/20 border-white/10"
-              icon={<Sparkles className="text-cyan-400" size={20} />}
-            >
-              Text Chat
-            </Button>
-          </div>
-
-          <div className="flex-1 relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-romantic-primary via-purple-500 to-romantic-accent rounded-full blur opacity-50 group-hover:opacity-80 transition duration-500 group-hover:duration-200 animate-pulse-slow"></div>
-            <Button
-              size="lg"
-              fullWidth
-              onClick={() => onFindMatch(interests, 'video')}
-              className="relative h-16 text-xl rounded-full shadow-2xl tracking-wide"
-              icon={<Video className="animate-pulse fill-white/30" size={24} />}
-            >
-              Video Chat
-            </Button>
-          </div>
+        {/* Main Action Button */}
+        <div className="relative group mb-16 w-full max-w-xs mx-auto z-10 px-4">
+          <div className="absolute -inset-1 bg-gradient-to-r from-romantic-primary via-purple-500 to-romantic-accent rounded-full blur opacity-50 group-hover:opacity-80 transition duration-500 group-hover:duration-200 animate-pulse-slow"></div>
+          <Button
+            size="lg"
+            fullWidth
+            onClick={() => onFindMatch(interests, 'text')}
+            className="relative h-16 text-xl rounded-full shadow-2xl tracking-wide"
+            icon={<Heart className="animate-pulse fill-white/30" size={24} />}
+          >
+            {interests.length > 0 ? "Find Soulmate" : "Start Chatting"}
+          </Button>
         </div>
 
         {/* Stats Grid - Increased bottom margin significantly */}

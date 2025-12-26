@@ -179,8 +179,9 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
               className="w-full h-full object-cover mirror-mode"
             />
             {!video.localStream && (
-              <div className="absolute inset-0 flex items-center justify-center bg-zinc-800">
-                <Camera className="text-white/20" size={24} />
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-800/90 backdrop-blur-sm cursor-pointer hover:bg-zinc-800 transition-colors" onClick={video.startVideo}>
+                <Camera className="text-white/50 mb-2" size={24} />
+                <span className="text-[10px] text-white/50 font-bold uppercase tracking-wider">Join Video</span>
               </div>
             )}
           </div>
@@ -190,8 +191,9 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
             <Button variant="secondary" onClick={video.toggleMic} className={`rounded-full !p-4 aspect-square shadow-lg backdrop-blur-xl ${!video.isAudioEnabled ? 'bg-red-500/80 text-white border-red-500' : 'bg-white/20 border-white/20'}`}>
               {video.isAudioEnabled ? <Mic size={24} /> : <MicOff size={24} />}
             </Button>
-            <Button variant="danger" onClick={video.stopVideo} className="rounded-full !p-4 aspect-square shadow-lg scale-110">
-              <VideoOff size={24} />
+            <Button variant="danger" onClick={video.stopVideo} className="rounded-full !px-6 !py-4 h-auto shadow-lg scale-105 flex items-center gap-2 hover:scale-110 transition-transform bg-red-600 hover:bg-red-700">
+              <VideoOff size={20} />
+              <span className="font-bold text-sm hidden md:inline">End Video</span>
             </Button>
             <Button variant="secondary" onClick={video.toggleCamera} className={`rounded-full !p-4 aspect-square shadow-lg backdrop-blur-xl ${!video.isVideoEnabled ? 'bg-red-500/80 text-white border-red-500' : 'bg-white/20 border-white/20'}`}>
               <Camera size={24} />
@@ -205,7 +207,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
         <div className="flex items-center gap-3">
           <div className="relative">
             <div className={`w-3 h-3 rounded-full transition-all duration-500 ${status === 'connected' ? 'bg-green-400 shadow-[0_0_12px_#4ade80]' :
-                status === 'partner_disconnected' ? 'bg-red-400' : 'bg-amber-400 animate-pulse'
+              status === 'partner_disconnected' ? 'bg-red-400' : 'bg-amber-400 animate-pulse'
               }`} />
             {status === 'connected' && <div className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-50"></div>}
           </div>
