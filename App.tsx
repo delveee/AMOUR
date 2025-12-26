@@ -48,7 +48,7 @@ const App: React.FC = () => {
               <div className="p-1.5 bg-romantic-primary/20 rounded-lg">
                 <Heart className="text-romantic-primary fill-romantic-primary" size={20} />
               </div>
-              <span className="font-display font-bold text-lg text-white tracking-wide">Amour</span>
+              <span className="font-display font-bold text-lg text-white tracking-wide">Random Chat</span>
             </div>
           </header>
         )}

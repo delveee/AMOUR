@@ -37,10 +37,10 @@ export const MatchScreen: React.FC<MatchScreenProps> = ({ onFindMatch, onlineCou
             <Sparkles className="text-romantic-primary animate-pulse" size={48} />
           </div>
           <h1 className="font-display font-bold text-4xl md:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-white via-romantic-secondary to-white drop-shadow-sm mb-2 tracking-tight">
-            Amour
+            Random Chat
           </h1>
           <p className="text-romantic-secondary/80 text-lg md:text-xl font-light tracking-wide">
-            Where strangers become soulmates.
+            Talk to strangers instantly.
           </p>
         </div>
       </div>
@@ -135,9 +135,8 @@ export const MatchScreen: React.FC<MatchScreenProps> = ({ onFindMatch, onlineCou
       </div>
 
       {/* Footer */}
-      <div className="mt-auto pt-8 flex gap-6 text-white/30">
-        <a href="#" className="hover:text-white transition-colors p-2 hover:bg-white/5 rounded-full"><Github size={20} /></a>
-        <a href="#" className="hover:text-white transition-colors p-2 hover:bg-white/5 rounded-full"><Coffee size={20} /></a>
+      <div className="mt-auto pt-8 flex gap-6 text-white/30 text-xs font-bold tracking-widest">
+        <span>RANDOM CHAT v2.0</span>
       </div>
     </div>
   );

@@ -1,74 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Heart_coraz%C3%B3n.svg/1200px-Heart_coraz%C3%B3n.svg.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>AmourChat | Romantic Connection</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              display: ['Playfair Display', 'serif'],
-              body: ['Nunito', 'sans-serif'],
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml"
+    href="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Heart_coraz%C3%B3n.svg/1200px-Heart_coraz%C3%B3n.svg.png" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Random Chat | Meet Strangers</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Playfair Display', 'serif'],
+            body: ['Nunito', 'sans-serif'],
+          },
+          colors: {
+            romantic: {
+              bg: '#0f0508',
+              panel: 'rgba(40, 15, 25, 0.75)',
+              primary: '#ff4d6d',
+              secondary: '#ff8fa3',
+              accent: '#800f2f',
+              text: '#fff0f3',
+              dim: 'rgba(255, 128, 191, 0.05)',
+              success: '#10b981', // Green for button click
+              error: '#ef4444',
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'heartbeat': 'heartbeat 1.5s ease-in-out infinite',
+            'fade-in': 'fadeIn 0.5s ease-out forwards',
+            'slide-up': 'slideUp 0.4s ease-out forwards',
+            'particle-fall': 'particleFall 1s ease-out forwards',
+            'pop': 'pop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+          },
+          keyframes: {
+            heartbeat: {
+              '0%, 100%': { transform: 'scale(1)' },
+              '50%': { transform: 'scale(1.05)' },
             },
-            colors: {
-              romantic: {
-                bg: '#0f0508',
-                panel: 'rgba(40, 15, 25, 0.75)',
-                primary: '#ff4d6d',
-                secondary: '#ff8fa3', 
-                accent: '#800f2f',
-                text: '#fff0f3',
-                dim: 'rgba(255, 128, 191, 0.05)',
-                success: '#10b981', // Green for button click
-                error: '#ef4444',
-              }
+            slideUp: {
+              '0%': { opacity: 0, transform: 'translateY(20px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' },
             },
-            animation: {
-              'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-              'float': 'float 6s ease-in-out infinite',
-              'heartbeat': 'heartbeat 1.5s ease-in-out infinite',
-              'fade-in': 'fadeIn 0.5s ease-out forwards',
-              'slide-up': 'slideUp 0.4s ease-out forwards',
-              'particle-fall': 'particleFall 1s ease-out forwards',
-              'pop': 'pop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+            fadeIn: {
+              '0%': { opacity: 0 },
+              '100%': { opacity: 1 },
             },
-            keyframes: {
-              heartbeat: {
-                '0%, 100%': { transform: 'scale(1)' },
-                '50%': { transform: 'scale(1.05)' },
-              },
-              slideUp: {
-                '0%': { opacity: 0, transform: 'translateY(20px)' },
-                '100%': { opacity: 1, transform: 'translateY(0)' },
-              },
-              fadeIn: {
-                '0%': { opacity: 0 },
-                '100%': { opacity: 1 },
-              },
-              float: {
-                '0%, 100%': { transform: 'translateY(0)' },
-                '50%': { transform: 'translateY(-15px)' },
-              },
-              particleFall: {
-                '0%': { transform: 'translate(0, 0) scale(1)', opacity: 1 },
-                '100%': { transform: 'translate(var(--tx), 100px) scale(0)', opacity: 0 },
-              },
-              pop: {
-                '0%': { transform: 'scale(0.95)' },
-                '50%': { transform: 'scale(1.02)' },
-                '100%': { transform: 'scale(1)' },
-              }
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-15px)' },
+            },
+            particleFall: {
+              '0%': { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+              '100%': { transform: 'translate(var(--tx), 100px) scale(0)', opacity: 0 },
+            },
+            pop: {
+              '0%': { transform: 'scale(0.95)' },
+              '50%': { transform: 'scale(1.02)' },
+              '100%': { transform: 'scale(1)' },
             }
           }
         }
       }
-    </script>
-    <!-- Global styles moved to index.css -->
+    }
+  </script>
+  <!-- Global styles moved to index.css -->
   <script type="importmap">
 {
   "imports": {
@@ -86,10 +91,12 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
+  <link rel="stylesheet" href="/index.css">
 </head>
-  <body>
-    <div id="root"></div>
+
+<body>
+  <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>
+
 </html>
